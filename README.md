@@ -1,1 +1,7 @@
-# otus-java-2018-04-MikhailSaprykin
+# Домашняя работа для курса "Разработчик Java" в OTUS
+
+Студент
+
+Сапрыкин Михаил
+
+vandaniel@mail.ru

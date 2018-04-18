@@ -72,6 +72,37 @@
                     </descriptorRefs>
                 </configuration>
             </plugin>
+			
+			<plugin>
+                <groupId>com.github.wvengen</groupId>
+                <artifactId>proguard-maven-plugin</artifactId>
+                <version>2.0.14</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>proguard</goal></goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <obfuscate>true</obfuscate>
+                    <options>
+                        <option>-printmapping myapplication.map </option>
+                        <option>-dontnote</option>
+                        <option>-dontwarn</option>
+                        <option>-ignorewarnings</option>
+                        <option>-keepclasseswithmembers public class sap.mikhail.HW01.GuavaFactorial{
+                            public static void main(java.lang.String[]);
+                            } </option>
+                    </options>
+                    <injar>${project.build.finalName}.jar</injar>
+                    <outjar>${project.build.finalName}_obf.jar</outjar>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                    <proguardInclude>${basedir}/proguard.conf</proguardInclude>
+                    <libs>
+                        <lib>${java.home}/lib/rt.jar</lib>
+                    </libs>
+                </configuration>
+            </plugin>
 
             <!--plugin>
                 <artifactId>maven-deploy-plugin</artifactId>

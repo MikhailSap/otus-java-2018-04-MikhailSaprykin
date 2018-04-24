@@ -18,7 +18,7 @@ public class MyMesureTestClass {
 
 
         System.out.println("ObjectSize = " + ObjectSizeCalculator.getObjectSize(o));
-        System.out.println("StringSize = " + ObjectSizeCalculator.getObjectSize(s));
+        System.out.println("StrinEmptygSize = " + ObjectSizeCalculator.getObjectSize(s));
         System.out.println("ArrayEmptySize = " + ObjectSizeCalculator.getObjectSize(i));
         System.out.println("Array1000Size = " + ObjectSizeCalculator.getObjectSize(i1000));
         System.out.println("StringWMSSize = " + ObjectSizeCalculator.getObjectSize(wms));

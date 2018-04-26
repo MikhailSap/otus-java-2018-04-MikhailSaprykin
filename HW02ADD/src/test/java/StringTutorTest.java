@@ -22,9 +22,9 @@ public class StringTutorTest  {
     @Test
     public void testCheckGreeting() {
         assertTrue(checkGreeting("Привет, Иван Иванов!"));
-        //assertTrue(checkGreeting("Привет,Петр Первый!"));
+        assertTrue(checkGreeting("Привет,Петр Первый!"));
         assertTrue(checkGreeting("Привет, Петр Первый!"));
-        //assertTrue(checkGreeting("Привет, Петр Первый !"));
+        assertTrue(checkGreeting("Привет, Петр Первый !"));
 
         assertFalse("В начале должно быть слово Привет и запятая",
                 checkGreeting("Здравствуйте, Петр Первый!"));

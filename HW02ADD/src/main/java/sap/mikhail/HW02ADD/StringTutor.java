@@ -32,7 +32,7 @@ public class StringTutor {
             }
         }
 
-        if(list.contains("")) {
+        if (list.contains("")) {
             list.remove("");
         }
 
@@ -40,7 +40,7 @@ public class StringTutor {
 
             checkPointsRWords = list.get(0).equals("Привет,") ? ++checkPointsRWords:checkPointsRWords;
 
-            if(list.size() == 3) {
+            if (list.size() == 3) {
                 checkPointsRWords = list.get(1).length() > 2 ? ++checkPointsRWords : checkPointsRWords;
                 checkPointsRWords = list.get(2).length() > 3 ? ++checkPointsRWords : checkPointsRWords;
                 lastSimb = list.get(2).toCharArray()[list.get(2).toCharArray().length - 1];

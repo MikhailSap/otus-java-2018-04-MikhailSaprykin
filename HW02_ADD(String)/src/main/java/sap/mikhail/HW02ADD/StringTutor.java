@@ -19,7 +19,7 @@ public class StringTutor {
             return false;
         }
         greeting = greeting.substring(greeting.indexOf(",") + 1, greeting.indexOf("!"));
-        greeting.trim();
+        greeting = greeting.trim();
         String[] sArray = greeting.split(" ");
 
         if (sArray.length!=2) {

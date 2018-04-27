@@ -25,5 +25,6 @@ public class StringTutor {
         if (Character.isLowerCase(sArray[0].toCharArray()[0]) || Character.isLowerCase(sArray[1].toCharArray()[0]))
             return false;
         return true;
+        
     }
 }

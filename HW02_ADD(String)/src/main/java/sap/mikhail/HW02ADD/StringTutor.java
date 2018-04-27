@@ -12,26 +12,18 @@ public class StringTutor {
 
     public static boolean checkGreeting(String greeting) {
 
-        if (!greeting.startsWith("Привет,")) {
+        if (!greeting.startsWith("Привет,"))
             return false;
-        }
-        if (!greeting.endsWith("!")) {
+        if (!greeting.endsWith("!"))
             return false;
-        }
-        greeting = greeting.substring(greeting.indexOf(",") + 1, greeting.indexOf("!"));
-        greeting = greeting.trim();
+        greeting = greeting.substring(greeting.indexOf(",") + 1, greeting.indexOf("!")).trim();
         String[] sArray = greeting.split(" ");
-
-        if (sArray.length!=2) {
+        if (sArray.length!=2)
             return false;
-        }
-        if (sArray[0].length()<3 || sArray[1].length()<3) {
+        if (sArray[0].length()<3 || sArray[1].length()<3)
             return false;
-        }
-        if (Character.isLowerCase(sArray[0].toCharArray()[0]) || Character.isLowerCase(sArray[1].toCharArray()[0])) {
+        if (Character.isLowerCase(sArray[0].toCharArray()[0]) || Character.isLowerCase(sArray[1].toCharArray()[0]))
             return false;
-        }
-
         return true;
     }
 }

@@ -6,11 +6,9 @@ import java.util.*;
 public class MyArrayList<E> implements List<E>, RandomAccess {
 
 
-    private static final int DEF_LENGTH = 10;
-    private Object[] elements = new Object[DEF_LENGTH];
-    private int currentLength = 10;
+    private static final int DEFAULT_LENGTH = 10;
+    private Object[] elements = new Object[DEFAULT_LENGTH];
     private int size;
-    private int modCount;
 
     public int size() {
         return this.size;
@@ -29,7 +27,9 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
     }
 
     public Object[] toArray() {
-        return new Object[0];
+        Object[] o = new Object[size];
+        System.arraycopy(elements, 0, o, 0, size);
+        return o;
     }
 
     public <T1> T1[] toArray(T1[] a) {
@@ -37,10 +37,8 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
     }
 
     public boolean add(E e) {
-        modCount++;
-        if (size==currentLength) {
-            currentLength = currentLength * 2;
-            Object[] tmpElements = new Object[currentLength];
+        if (size==elements.length) {
+            Object[] tmpElements = new Object[elements.length*2];
             System.arraycopy(elements, 0, tmpElements, 0, size);
             elements = tmpElements;
         }
@@ -86,7 +84,6 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
     }
 
     public E set(int index, E element) {
-        modCount++;
         if (index<0 || index>=size) {
             throw new IndexOutOfBoundsException();
         } else {
@@ -125,18 +122,9 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
         return null;
     }
 
-    public void sort(Comparator<? super E> c) {
-        final int expectedModCount = modCount;
-        Arrays.sort((E[]) elements, 0, size, c);
-        if (modCount != expectedModCount)
-            throw new ConcurrentModificationException();
-        modCount++;
-    }
-
     private class MyIterator implements Iterator<E> {
         private int cursor;
         protected int lastRet = -1;
-        int expectedModCount = modCount;
 
         public boolean hasNext() {
             return cursor!=size;
@@ -145,8 +133,6 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
         public E next() {
             if (cursor>size)
                 throw new NoSuchElementException();
-            if (cursor>elements.length)
-                throw new ConcurrentModificationException();
             return (E) elements[lastRet = cursor++];
         }
 
@@ -154,7 +140,6 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
 
         }
     }
-
 
     private class MyListIterator extends MyIterator implements ListIterator<E> {
 
@@ -182,19 +167,12 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
         public void set(E e) {
             if (lastRet < 0)
                 throw new IllegalStateException();
-            if (expectedModCount!=modCount) {
-                throw new ConcurrentModificationException();
-            }
-            try {
-                MyArrayList.this.set(lastRet, e);
-            } catch (IndexOutOfBoundsException ex) {
-                throw new ConcurrentModificationException();
-            }
-
+            MyArrayList.this.set(lastRet, e);
         }
 
         public void add(E e) {
 
         }
     }
+
 }

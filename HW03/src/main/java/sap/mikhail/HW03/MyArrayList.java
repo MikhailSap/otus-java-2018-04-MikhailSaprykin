@@ -8,7 +8,7 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
 
     private static final int DEF_LENGTH = 10;
     private Object[] elements = new Object[DEF_LENGTH];
-    private int CURRENT_LENGTH = 10;
+    private int currentLength = 10;
     private int size;
     private int modCount;
 
@@ -38,9 +38,9 @@ public class MyArrayList<E> implements List<E>, RandomAccess {
 
     public boolean add(E e) {
         modCount++;
-        if (size==CURRENT_LENGTH) {
-            CURRENT_LENGTH = CURRENT_LENGTH * 2;
-            Object[] tmpElements = new Object[CURRENT_LENGTH];
+        if (size==currentLength) {
+            currentLength = currentLength * 2;
+            Object[] tmpElements = new Object[currentLength];
             System.arraycopy(elements, 0, tmpElements, 0, size);
             elements = tmpElements;
         }

@@ -13,9 +13,10 @@ public enum RequestState {
                     "\n" + "Please deposit cash. When you done, enter \"ok\".");
             deposit = moneyBank.depositBanknotes();
             request.getClient().depositBalance(deposit);
-            System.out.println(deposit + " rubles will be credited to your account");
             moneyBank.updateAmount();
-            System.out.println("Goodbye.");
+            System.out.println(deposit + " rubles will be credited to your account." +
+                    "\n" + "Your account balance: " + request.getClient().getBalance() + " Rubles." +
+                    "\n" + "Goodbye.");
             request.setRequestState(EXIT);
         }
     },
@@ -49,8 +50,10 @@ public enum RequestState {
             withdraw = request.getRequestMount();
             if (moneyBank.withdrawalBanknotes(withdraw)) {
                 request.getClient().withdrawBalance(withdraw);
-                System.out.println("Please take you money." + "\n" + "Goodbye.");
                 moneyBank.updateAmount();
+                System.out.println("Please take you money." +
+                        "\n" + "Your account balance: " + request.getClient().getBalance() + " Rubles." +
+                        "\n" + "Goodbye.");
                 request.setRequestState(EXIT);
             } else {
                 System.out.println("The requested amount cannot be issued, please enter another amount.");

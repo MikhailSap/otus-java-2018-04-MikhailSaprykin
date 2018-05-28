@@ -9,11 +9,11 @@ public class MoneyBank {
     private HashMap<Integer, Integer> banknotes = new HashMap<Integer, Integer>();
 
     private MoneyBank() {
-        banknotes.put(5000, 1);
-        banknotes.put(1000, 0);
-        banknotes.put(500, 0);
-        banknotes.put(100, 0);
-        banknotes.put(50, 1);
+        banknotes.put(5000, 5);
+        banknotes.put(1000, 1);
+        banknotes.put(500, 7);
+        banknotes.put(100, 10);
+        banknotes.put(50, 3);
         updateAmount();
     }
 

@@ -1,27 +1,27 @@
 package sap.mikhail.HW06;
 
 public class Client {
-    private int id;
+    private final int ID;
     private int balance;
 
     public Client(int id, int balance) {
-        this.id = id;
+        ID = id;
         this.balance = balance;
     }
 
     public int getId() {
-        return id;
+        return ID;
     }
 
     public int getBalance() {
         return balance;
     }
 
-    public void depositBalance(int deposit) {
+    public void deposit(int deposit) {
         this.balance = balance + deposit;
     }
 
-    public void withdrawBalance(int withdraw) {
+    public void withdraw(int withdraw) {
         this.balance = balance - withdraw;
     }
 }

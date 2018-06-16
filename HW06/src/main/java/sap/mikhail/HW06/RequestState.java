@@ -1,41 +1,20 @@
 package sap.mikhail.HW06;
 
 
-import java.util.Scanner;
+import sap.mikhail.HW06.exceptions.AmountCannotBeIssuedException;
+import sap.mikhail.HW06.exceptions.NotHaveEnoughFundsExceprion;
 
 public enum RequestState {
     DEPOSIT {
-        int deposit;
-        MoneyBank moneyBank = MoneyBank.getMoneyBank();
-
         public void doAction(Request request) {
-            System.out.println("I accept just 50, 100, 500, 1000, 5000 banknotes." +
-                    "\n" + "Please deposit cash. When you done, enter \"ok\".");
-            deposit = moneyBank.depositBanknotes();
-            request.getClient().depositBalance(deposit);
-            moneyBank.updateAmount();
-            System.out.println(deposit + " rubles will be credited to your account." +
-                    "\n" + "Your account balance: " + request.getClient().getBalance() + " Rubles." +
-                    "\n" + "Goodbye.");
+            banknoteController.depositBanknotes(request.getRequestAMount());
+            request.getClient().deposit(request.getRequestAMount());
             request.setRequestState(EXIT);
         }
     },
-    ANALYSISFORWITHSRAW {
-        int withdraw;
-        Client client;
-        Scanner scanner = new Scanner(System.in);
-
+    ANALYSIS_FOR_WITHDRAW {
         public void doAction(Request request) {
-            System.out.println("How match money you need?");
-            while (true) {
-                withdraw = scanner.nextInt();
-                if(withdraw%50 != 0) {
-                    System.out.println("Please enter requested amount correct");
-                } else { break; }
-            }
-            client = request.getClient();
-            if (client.getBalance() >= withdraw) {
-                request.setRequestMount(withdraw);
+            if (request.getClient().getBalance() >= request.getRequestAMount()) {
                 request.setRequestState(ACCEPTED);
             } else {
                 request.setRequestState(REJECTED);
@@ -43,34 +22,26 @@ public enum RequestState {
         }
     },
     ACCEPTED {
-        int withdraw;
-        MoneyBank moneyBank = MoneyBank.getMoneyBank();
-
         public void doAction(Request request) {
-            withdraw = request.getRequestMount();
-            if (moneyBank.withdrawalBanknotes(withdraw)) {
-                request.getClient().withdrawBalance(withdraw);
-                moneyBank.updateAmount();
-                System.out.println("Please take you money." +
-                        "\n" + "Your account balance: " + request.getClient().getBalance() + " Rubles." +
-                        "\n" + "Goodbye.");
+            int withdraw = request.getRequestAMount();
+            if (banknoteController.isPossibleIssuance(withdraw)) {
+                banknoteController.withdrawalBanknotes();
+                request.getClient().withdraw(withdraw);
                 request.setRequestState(EXIT);
             } else {
-                System.out.println("The requested amount cannot be issued, please enter another amount.");
-                request.setRequestState(ANALYSISFORWITHSRAW);
+                throw new AmountCannotBeIssuedException();
             }
         }
     },
     REJECTED {
         public void doAction(Request request) {
-            System.out.println("Your account does not have enough funds, please enter another amount.");
-            request.setRequestState(ANALYSISFORWITHSRAW);
+            throw new NotHaveEnoughFundsExceprion();
         }
     },
     EXIT {
-        public void doAction(Request request) throws Exception {
-        throw new Exception();
-        }
+        public void doAction(Request request) {}
     };
-    public abstract void doAction(Request request) throws Exception;
+
+    BanknoteController banknoteController = new BanknoteController();
+    public abstract void doAction(Request request);
 }

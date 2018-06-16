@@ -5,9 +5,9 @@ public interface Request {
 
     void setRequestState(RequestState requestState);
 
-    int getRequestMount();
+    int getRequestAMount();
 
-    void setRequestMount(int requestMount);
+    void setRequestAMount(int requestMount);
 
-    void doAction() throws Exception;
+    boolean toHandle();
 }

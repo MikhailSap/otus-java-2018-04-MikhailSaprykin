@@ -3,12 +3,12 @@ package sap.mikhail.HW06;
 public class WithdrawRequest implements Request {
     private Client client;
     private RequestState requestState;
-    private int requestMount;
+    private int requestAMount;
 
 
     public WithdrawRequest(Client client) {
         this.client= client;
-        requestState = RequestState.ANALYSISFORWITHSRAW;
+        requestState = RequestState.ANALYSIS_FOR_WITHDRAW;
     }
 
     public Client getClient() {
@@ -19,15 +19,16 @@ public class WithdrawRequest implements Request {
         this.requestState = requestState;
     }
 
-    public int getRequestMount() {
-        return requestMount;
+    public int getRequestAMount() {
+        return requestAMount;
     }
 
-    public void setRequestMount(int requestMount) {
-        this.requestMount = requestMount;
+    public void setRequestAMount(int requestMount) {
+        this.requestAMount = requestMount;
     }
 
-    public void doAction() throws Exception{
+    public boolean toHandle(){
         requestState.doAction(this);
+        return requestState == RequestState.EXIT;
     }
 }

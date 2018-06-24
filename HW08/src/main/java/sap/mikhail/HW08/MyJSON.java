@@ -10,6 +10,9 @@ import java.lang.reflect.Modifier;
 import java.util.*;
 
 public class MyJSON {
+
+    private enum  type {IS_ARRAY, IS_ITERABLE, IS_MAP, IS_OBJECT, OTHER}
+
     public String toJSON(Object o) {
         Object postParse = parser(o);
         if (postParse instanceof JSONObject) {
@@ -19,39 +22,39 @@ public class MyJSON {
     }
 
     private Object parser(Object o) {
-        String whatIsIt;
+        type whatIsIt;
         Object result = null;
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
         String isObject = JSONValue.toJSONString(o);
         if (o.getClass().isArray()) {
-            whatIsIt = "isArray";
+            whatIsIt = type.IS_ARRAY;
         } else
         if (o instanceof Iterable) {
-            whatIsIt = "isIterable";
+            whatIsIt = type.IS_ITERABLE;
         } else
         if (o instanceof Map) {
-            whatIsIt = "isMap";
+            whatIsIt = type.IS_MAP;
         } else
         if (isObject.contains("@") && !(o instanceof String)) {
-            whatIsIt = "isObject";
-        } else {whatIsIt = "Other";}
+            whatIsIt = type.IS_OBJECT;
+        } else {whatIsIt = type.OTHER;}
 
         switch (whatIsIt) {
-            case "isArray": {
+            case IS_ARRAY: {
                 for (int i = 0 ; i < Array.getLength(o) ; i++) {
                     jsonArray.add(parser(Array.get(o, i)));
                 }
                 result = jsonArray;
             } break;
-            case "isIterable": {
+            case IS_ITERABLE: {
                 Iterator iterator = ((Iterable)o).iterator();
                 while (iterator.hasNext()) {
                     jsonArray.add(parser(iterator.next()));
                 }
                 result = jsonArray;
             } break;
-            case "isMap": {
+            case IS_MAP: {
                 Map map = (Map) o;
                 boolean checkKey = false;
                 for (Object key : map.keySet()) {
@@ -65,7 +68,7 @@ public class MyJSON {
                 else
                     result = jsonObject;
             } break;
-            case "isObject": {
+            case IS_OBJECT: {
                 List<Field> fields = new ArrayList<>();
                 if (o.getClass().getSuperclass() != null)
                     Collections.addAll(fields, o.getClass().getSuperclass().getDeclaredFields());
@@ -81,7 +84,7 @@ public class MyJSON {
                 }
                 result = jsonObject;
             } break; 
-            case "Other": {
+            case OTHER: {
                 if (o.getClass().equals(Character.class))
                     result = Character.toString((char)o);
                 else

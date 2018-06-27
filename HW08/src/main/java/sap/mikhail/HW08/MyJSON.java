@@ -11,7 +11,7 @@ import java.util.*;
 
 public class MyJSON {
 
-    private enum  type {IS_ARRAY, IS_ITERABLE, IS_MAP, IS_OBJECT, OTHER}
+    private enum  Type {IS_ARRAY, IS_ITERABLE, IS_MAP, IS_OBJECT, OTHER}
 
     public String toJSON(Object o) {
         Object postParse = parser(o);
@@ -22,25 +22,11 @@ public class MyJSON {
     }
 
     private Object parser(Object o) {
-        type whatIsIt;
         Object result = null;
         JSONObject jsonObject = new JSONObject();
         JSONArray jsonArray = new JSONArray();
-        String isObject = JSONValue.toJSONString(o);
-        if (o.getClass().isArray()) {
-            whatIsIt = type.IS_ARRAY;
-        } else
-        if (o instanceof Iterable) {
-            whatIsIt = type.IS_ITERABLE;
-        } else
-        if (o instanceof Map) {
-            whatIsIt = type.IS_MAP;
-        } else
-        if (isObject.contains("@") && !(o instanceof String)) {
-            whatIsIt = type.IS_OBJECT;
-        } else {whatIsIt = type.OTHER;}
 
-        switch (whatIsIt) {
+        switch (whatIsIt(o)) {
             case IS_ARRAY: {
                 for (int i = 0 ; i < Array.getLength(o) ; i++) {
                     jsonArray.add(parser(Array.get(o, i)));
@@ -92,5 +78,24 @@ public class MyJSON {
             } break;
         }
         return result;
+    }
+
+    private Type whatIsIt(Object o) {
+        Type whatIsIt;
+        String isObject = JSONValue.toJSONString(o);
+
+        if (o.getClass().isArray()) {
+            whatIsIt = Type.IS_ARRAY;
+        } else
+        if (o instanceof Iterable) {
+            whatIsIt = Type.IS_ITERABLE;
+        } else
+        if (o instanceof Map) {
+            whatIsIt = Type.IS_MAP;
+        } else
+        if (isObject.contains("@") && !(o instanceof String)) {
+            whatIsIt = Type.IS_OBJECT;
+        } else {whatIsIt = Type.OTHER;}
+        return whatIsIt;
     }
 }

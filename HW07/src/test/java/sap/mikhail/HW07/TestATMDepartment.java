@@ -1,70 +1,132 @@
 package sap.mikhail.HW07;
 
 import org.junit.Test;
+import sap.mikhail.HW07.ATMDepartment.ATMDepartment;
+import sap.mikhail.HW07.ATMs.*;
+import sap.mikhail.HW07.ATMs.ATMContent.ClientsBase;
+import sap.mikhail.HW07.ATMs.ATMContent.MoneyBank;
+
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 
-import sap.mikhail.HW07.ATMDepartment.ATMBase;
-import sap.mikhail.HW07.ATMDepartment.ATMDepartment;
-
 public class TestATMDepartment {
+    ATMDepartment atmDepartment = new ATMDepartment();
+    ATMFactory atmFactory = new ATMFactory();
+    ATMBase atmBase = ATMBase.getAtmBase();
+    ClientsBase clientsBase = ClientsBase.getClientsBase();
+    DepositAndWithdrawATM depositAndWithdrawATM;
+    WithdrawATM withdrawATM;
+
+    public void init() {
+        atmBase.addATM(atmFactory.getATM(TypeATM.DEPOSIT_AND_WITHDRAW_ATM)); //creat ATM with ID=1
+        atmBase.addATM(atmFactory.getATM(TypeATM.WITHDRAW_ATM)); //creat ATM with ID=2
+
+        depositAndWithdrawATM = (DepositAndWithdrawATM) atmBase.getATM(1);
+        withdrawATM = (WithdrawATM) atmBase.getATM(2);
+
+        clientsBase.addClient(1, 125000);
+    }
+
+    @Test
+    public void getBalanceFromATMTest() {
+        init();
+        //default balance ATM is - 66500
+
+        depositAndWithdrawATM.createDepositRequest(1, 5000);
+        depositAndWithdrawATM.toHandleTheRequest();
+        depositAndWithdrawATM.createDepositRequest(1, 1000);
+        depositAndWithdrawATM.toHandleTheRequest();
+        depositAndWithdrawATM.createWithdrawRequest(1, 500);
+        depositAndWithdrawATM.toHandleTheRequest();
+
+        int balance = atmDepartment.getBalanceATM(1);
+        assertTrue(balance == 72000);
+    }
 
     @Test
     public void setDefaultATMTest() {
-        sap.mikhail.HW07.ATM00.ATM.getATM().startATM();
+        init();
 
-       try {
-           Thread.sleep(500);
-       }catch (Exception e) {}
-       new ATMDepartment().setDefaultATM(000000);
+        int balance;
+        int countWithdrawRequests;
+        balance = atmDepartment.getBalanceATM(2);
+        countWithdrawRequests = withdrawATM.getCountWithdrawRequests();
 
-       assertTrue(sap.mikhail.HW07.ATM00.ATM.getATM().isDefault());
+        assertTrue(balance == 66500);
+        assertTrue(countWithdrawRequests == 0);
+
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+
+        balance = atmDepartment.getBalanceATM(2);
+        countWithdrawRequests = withdrawATM.getCountWithdrawRequests();
+
+        assertTrue(balance == 51500);
+        assertTrue(countWithdrawRequests == 3);
+
+        atmDepartment.setDefaultATM(2);
+
+        balance = atmDepartment.getBalanceATM(2);
+        countWithdrawRequests = withdrawATM.getCountWithdrawRequests();
+
+        assertTrue(balance == 66500);
+        assertTrue(countWithdrawRequests == 0);
     }
 
-    @Test
-    public void getBalanceATMTest() {
-        sap.mikhail.HW07.ATM01.ATM.getATM().startATM();
-
-        try {
-            Thread.sleep(500);
-        }catch (Exception e) {}
-        new ATMDepartment().getBalanceATM(000001);
-
-        assertTrue(ATMBase.getATMBase().getBase().get(0000001).getBalance() == 5000);
-    }
 
     @Test
     public void setDefaultAllATMTest() {
-        sap.mikhail.HW07.ATM00.ATM.getATM().startATM();
-        sap.mikhail.HW07.ATM01.ATM.getATM().startATM();
+        init();
 
-        try {
-            Thread.sleep(500);
-        }catch (Exception e) {}
-        new ATMDepartment().setDefaultAllATM();
+        depositAndWithdrawATM.createDepositRequest(1, 5000);
+        depositAndWithdrawATM.toHandleTheRequest();
+        depositAndWithdrawATM.createDepositRequest(1, 1000);
+        depositAndWithdrawATM.toHandleTheRequest();
+        depositAndWithdrawATM.createWithdrawRequest(1, 500);
+        depositAndWithdrawATM.toHandleTheRequest();
 
-        assertTrue(sap.mikhail.HW07.ATM00.ATM.getATM().isDefault());
-        assertTrue(sap.mikhail.HW07.ATM01.ATM.getATM().isDefault());
+
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+        withdrawATM.createWithdrawRequest(1, 5000);
+        withdrawATM.toHandleTheRequest();
+
+        atmDepartment.setDefaultAllATM();
+
+        assertTrue(depositAndWithdrawATM.getBalance() == 66500);
+        assertTrue(withdrawATM.getBalance() == 66500);
+        assertTrue(depositAndWithdrawATM.getCountDepositRewuests() == 0);
+        assertTrue(depositAndWithdrawATM.getCountWithdrawRequests() == 0);
+        assertTrue(withdrawATM.getCountWithdrawRequests() == 0);
     }
 
     @Test
     public void getBalancesFromAllATMTest() {
-        sap.mikhail.HW07.ATM00.ATM.getATM().startATM();
-        sap.mikhail.HW07.ATM01.ATM.getATM().startATM();
+        init();
 
-        try {
-            Thread.sleep(500);
-        }catch (Exception e) {}
-        new ATMDepartment().getBalancesFromAllATM();
+        HashMap<Integer, Integer> balances = atmDepartment.getBalancesFromAllATM();
 
-        assertTrue(ATMBase.getATMBase().getBase().get(0000000).getBalance() == 1000);
-        assertTrue(ATMBase.getATMBase().getBase().get(0000001).getBalance() == 5000);
+        balances.forEach(
+                (id, balance) -> {
+                    assertTrue(balance == 66500);
+                }
+        );
+
     }
 
     @Test
     public void getAllMoneyTest() {
-        getBalancesFromAllATMTest();
-        assertTrue(new ATMDepartment().getAllMoney() == 6000);
+        init();
+
+        assertTrue(atmDepartment.getAllMoney() == 133000);
     }
 
 

@@ -12,10 +12,9 @@ import java.util.Map;
 public class ATMDepartment {
     private ATMBase atmBase = ATMBase.getAtmBase();
 
-
     public HashMap<Integer, Integer> getBalancesFromAllATM() {
-        int id;
-        int balance;
+       int id;
+       int balance;
        HashMap<Integer, Integer> balansesFromAllATM = new HashMap<>();
        for (Map.Entry<Integer, ATM> atm : atmBase.getAllATM().entrySet()) {
            id = atm.getKey();
@@ -51,7 +50,5 @@ public class ATMDepartment {
         }
         return allMoney;
     }
-
-
-    }
+}
 

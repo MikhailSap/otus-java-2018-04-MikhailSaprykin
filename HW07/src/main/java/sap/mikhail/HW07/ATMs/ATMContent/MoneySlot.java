@@ -1,6 +1,7 @@
 package sap.mikhail.HW07.ATMs.ATMContent;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MoneySlot {
     private int count = 10;
@@ -23,10 +24,10 @@ public class MoneySlot {
     }
 
 
-    public static ArrayList<MoneySlot> getMoneySlots() {
-        ArrayList<MoneySlot> moneySlots = new ArrayList<>();
-        for (int i=0; i<5; i++)
-        moneySlots.add(new MoneySlot());
+    public static HashMap<Nominal, MoneySlot> getMoneySlots() {
+        HashMap<Nominal, MoneySlot> moneySlots = new HashMap<>();
+        for (Nominal banknote : Nominal.values())
+            moneySlots.put(banknote, new MoneySlot());
         return moneySlots;
     }
 

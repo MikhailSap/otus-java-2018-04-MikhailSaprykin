@@ -4,7 +4,6 @@ import org.junit.Test;
 import sap.mikhail.HW07.ATMDepartment.ATMDepartment;
 import sap.mikhail.HW07.ATMs.*;
 import sap.mikhail.HW07.ATMs.ATMContent.ClientsBase;
-import sap.mikhail.HW07.ATMs.ATMContent.MoneyBank;
 
 import java.util.HashMap;
 
@@ -14,17 +13,26 @@ import static org.junit.Assert.*;
 public class TestATMDepartment {
     ATMDepartment atmDepartment = new ATMDepartment();
     ATMFactory atmFactory = new ATMFactory();
-    ATMBase atmBase = ATMBase.getAtmBase();
+    ATMRepository atmRepository = ATMRepository.getAtmRepository();
     ClientsBase clientsBase = ClientsBase.getClientsBase();
     DepositAndWithdrawATM depositAndWithdrawATM;
     WithdrawATM withdrawATM;
 
-    public void init() {
-        atmBase.addATM(atmFactory.getATM(TypeATM.DEPOSIT_AND_WITHDRAW_ATM)); //creat ATM with ID=1
-        atmBase.addATM(atmFactory.getATM(TypeATM.WITHDRAW_ATM)); //creat ATM with ID=2
+    @Test
+    public void atmFactoryTest() {
+       BaseATM atm1 = atmFactory.getATM(TypeATM.DEPOSIT_AND_WITHDRAW_ATM); //creat ATM with ID=1
+       BaseATM atm2 = atmFactory.getATM(TypeATM.WITHDRAW_ATM); //creat ATM with ID=2
 
-        depositAndWithdrawATM = (DepositAndWithdrawATM) atmBase.getATM(1);
-        withdrawATM = (WithdrawATM) atmBase.getATM(2);
+        assertTrue(atm1 instanceof DepositAndWithdrawATM);
+        assertTrue(atm2 instanceof WithdrawATM);
+    }
+
+    public void init() {
+        atmRepository.addATM(atmFactory.getATM(TypeATM.DEPOSIT_AND_WITHDRAW_ATM)); //creat ATM with ID=1
+        atmRepository.addATM(atmFactory.getATM(TypeATM.WITHDRAW_ATM)); //creat ATM with ID=2
+
+        depositAndWithdrawATM = (DepositAndWithdrawATM) atmRepository.getATM(1);
+        withdrawATM = (WithdrawATM) atmRepository.getATM(2);
 
         clientsBase.addClient(1, 125000);
     }
@@ -103,7 +111,7 @@ public class TestATMDepartment {
 
         assertTrue(depositAndWithdrawATM.getBalance() == 66500);
         assertTrue(withdrawATM.getBalance() == 66500);
-        assertTrue(depositAndWithdrawATM.getCountDepositRewuests() == 0);
+        assertTrue(depositAndWithdrawATM.getCountDepositRequests() == 0);
         assertTrue(depositAndWithdrawATM.getCountWithdrawRequests() == 0);
         assertTrue(withdrawATM.getCountWithdrawRequests() == 0);
     }

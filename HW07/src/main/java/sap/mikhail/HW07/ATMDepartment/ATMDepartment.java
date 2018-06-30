@@ -1,8 +1,9 @@
 package sap.mikhail.HW07.ATMDepartment;
 
 
-import sap.mikhail.HW07.ATMs.ATM;
-import sap.mikhail.HW07.ATMs.ATMBase;
+
+import sap.mikhail.HW07.ATMs.ATMRepository;
+import sap.mikhail.HW07.ATMs.BaseATM;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,13 +11,13 @@ import java.util.Map;
 
 
 public class ATMDepartment {
-    private ATMBase atmBase = ATMBase.getAtmBase();
+    private ATMRepository atmRepository = ATMRepository.getAtmRepository();
 
     public HashMap<Integer, Integer> getBalancesFromAllATM() {
        int id;
        int balance;
        HashMap<Integer, Integer> balansesFromAllATM = new HashMap<>();
-       for (Map.Entry<Integer, ATM> atm : atmBase.getAllATM().entrySet()) {
+       for (Map.Entry<Integer, BaseATM> atm : atmRepository.getAllATM().entrySet()) {
            id = atm.getKey();
            balance = atm.getValue().getBalance();
            balansesFromAllATM.put(id, balance);
@@ -25,7 +26,7 @@ public class ATMDepartment {
     }
 
     public void setDefaultAllATM() {
-        atmBase.getAllATM().forEach(
+        atmRepository.getAllATM().forEach(
                 (id, atm) -> {
                     atm.setDefault();
                 }
@@ -34,12 +35,12 @@ public class ATMDepartment {
     }
 
     public int getBalanceATM(int id) {
-        return atmBase.getATM(id).getBalance();
+        return atmRepository.getATM(id).getBalance();
     }
 
 
     public void setDefaultATM(int id) {
-        atmBase.getATM(id).setDefault();
+        atmRepository.getATM(id).setDefault();
     }
 
     public int getAllMoney() {

@@ -3,13 +3,22 @@ package sap.mikhail.HW07.ATMs.ATMContent;
 
 import sap.mikhail.HW07.ATMs.ATMContent.exceptions.IncompatibleNominalException;
 
+import java.util.HashMap;
+
 public class BanknoteController {
+    private static HashMap<Nominal, MoneySlot> moneySlots;
+    private MoneySlot moneySlot = null;
+
+    public static void setMoneySlots(MoneyBank moneyBank) {
+        moneySlots = moneyBank.getMoneySlots();
+    }
 
     public void depositBanknotes(int deposit) {
         boolean isCorrectNominal = false;
-        for (MoneyBank banknote : MoneyBank.values())
+        for (Nominal banknote : Nominal.values())
             if (banknote.getNominal() == deposit) {
-                banknote.setCount(banknote.getCount() + 1);
+                moneySlot = moneySlots.get(banknote);
+                moneySlot.setCount(moneySlot.getCount() + 1);
                 isCorrectNominal = true;
             }
         if (!isCorrectNominal) {
@@ -17,26 +26,26 @@ public class BanknoteController {
         }
     }
 
-    public boolean isPossibleIssuance(int withsrawAmount) {
-        int checkWithdrawAmount = 0;
-        int copyWithdrawAmount = withsrawAmount;
-        int countBanknoteForWithdaw;
-        for (MoneyBank banknote : MoneyBank.values()) {
+    public boolean isPossibleIssuance(int withdrawAmount) {
+        int copyWithdrawAmount = withdrawAmount;
+        int countBanknoteForWithdraw;
+        for (Nominal banknote : Nominal.values()) {
+            moneySlot = moneySlots.get(banknote);
             if (copyWithdrawAmount < banknote.getNominal())
                 continue;
-            countBanknoteForWithdaw = copyWithdrawAmount/banknote.getNominal();
-            if (countBanknoteForWithdaw > banknote.getCount())
+            countBanknoteForWithdraw = copyWithdrawAmount/banknote.getNominal();
+            if (countBanknoteForWithdraw > moneySlot.getCount())
                 continue;
-            banknote.setCountForWithdraw(countBanknoteForWithdaw);
+            moneySlot.setCountForWithdraw(countBanknoteForWithdraw);
             copyWithdrawAmount = copyWithdrawAmount%banknote.getNominal();
         }
-        for (MoneyBank banknote : MoneyBank.values())
-            checkWithdrawAmount+=banknote.getCountForWithdraw()*banknote.getNominal();
-        return checkWithdrawAmount == withsrawAmount;
+        return copyWithdrawAmount == 0;
     }
 
     public void withdrawalBanknotes() {
-        for (MoneyBank banknote : MoneyBank.values())
-            banknote.setCount(banknote.getCount()-banknote.getCountForWithdraw());
+        for (Nominal banknote : Nominal.values()) {
+            moneySlot = moneySlots.get(banknote);
+            moneySlot.setCount(moneySlot.getCount() - moneySlot.getCountForWithdraw());
+        }
     }
 }
